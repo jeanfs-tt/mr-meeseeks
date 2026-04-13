@@ -14,26 +14,30 @@ This is a **helper functions library**. Each helper is a pure, standalone functi
 
 ```
 src/helpers/
-├── index.ts              # Barrel export - re-exports every helper
-├── slugify.ts            # One function per file
-├── formatCurrency.ts
-└── __tests__/
-    ├── slugify.test.ts   # Tests in __tests__ folder
-    └── formatCurrency.test.ts
+├── index.ts                        # Barrel export - re-exports every helper
+└── <functionName>/
+    ├── <functionName>.ts            # The helper function
+    ├── <functionName>.test.ts       # Tests
+    ├── <functionName>.constants.ts  # Constants (if needed)
+    └── <functionName>.types.ts      # Types (if needed)
 ```
 
 ### Rules
 
-1. **One function per file.** The file name matches the function name in camelCase.
+1. **One function per folder.** Each helper lives in its own folder named after the function.
 2. **Named exports only.** No default exports.
 3. **Barrel export.** Every helper must be re-exported from `src/helpers/index.ts`.
-4. **Tests in `__tests__`.** Every `<name>.ts` must have a `__tests__/<name>.test.ts` file.
+4. **Co-located tests.** Every `<name>.ts` must have a `<name>.test.ts` in the same folder.
+5. **Co-located constants and types.** If a helper needs constants or types, create `<functionName>.constants.ts` and/or `<functionName>.types.ts` in the same folder.
 
 ## Naming Conventions
 
 - **Functions**: `camelCase`, verb-prefixed. Use one of: `format`, `get`, `is`, `has`, `to`, `parse`, `create`, `validate`, `slugify`, `truncate`, `debounce`, `throttle`, `clamp`, `group`, `sort`, `filter`, `map`, `merge`, `deep`, `capitalize`, `sanitize`.
-- **Files**: Same as function name. `formatCurrency.ts`, not `format-currency.ts` or `currency.ts`.
+- **Folders**: Same as function name. `clampNumber/`, not `clamp-number/` or `clamp/`.
+- **Files**: Same as function name. `clampNumber.ts`, not `clamp-number.ts` or `clamp.ts`.
 - **Test files**: `<functionName>.test.ts`.
+- **Constants files**: `<functionName>.constants.ts`. Export individual `const` values using `UPPER_SNAKE_CASE`.
+- **Types files**: `<functionName>.types.ts`. Export types/interfaces using `PascalCase` with a descriptive name (e.g., `ClampNumberOptions`).
 
 ## JSDoc Requirements
 
@@ -59,9 +63,9 @@ Every exported function MUST have a JSDoc block with ALL of these tags:
 Every function MUST validate all parameters at the top of the function body, BEFORE any logic:
 
 ```ts
-export function formatCurrency(amount: number): string {
-  if (typeof amount !== 'number' || !Number.isFinite(amount)) {
-    throw new TypeError('[formatCurrency] Expected amount to be a finite number');
+export function clampNumber(value: number, min: number, max: number): number {
+  if (value === undefined || value === null) {
+    throw new TypeError('[clampNumber] Expected value to be provided');
   }
 
   // ... actual logic
@@ -70,12 +74,9 @@ export function formatCurrency(amount: number): string {
 
 ### Validation rules
 
-- Check **every** parameter.
+- Check **every** parameter for `null` and `undefined`.
 - Throw `TypeError` (not `Error`).
-- Error message format: `[functionName] Expected paramName to be <type/condition>`.
-- For strings: check `typeof input !== 'string'`.
-- For numbers: check `typeof input !== 'number' || !Number.isFinite(input)`.
-- For arrays: check `!Array.isArray(input)`.
+- Error message format: `[functionName] Expected paramName to be <condition>`.
 - For optional params: only validate if provided (not `undefined`).
 
 ## Purity
@@ -86,28 +87,21 @@ export function formatCurrency(amount: number): string {
 
 ## Testing Requirements
 
-Every helper MUST have a `.test.ts` file in `__tests__/` using Vitest with this structure:
+Every helper MUST have a `.test.ts` file in the same folder using Vitest with this structure:
 
 ```ts
 import { describe, it, expect } from 'vitest';
-import { functionName } from '../functionName';
+import { functionName } from './functionName';
 
 describe('functionName', () => {
-  describe('happy path', () => {
-    it('describes what happens with normal input', () => { ... });
-  });
+  it('describes what happens with normal input', () => { ... });
 
-  describe('edge cases', () => {
-    it('handles empty string', () => { ... });
-    it('handles zero', () => { ... });
-    // ... more edge cases
-  });
+  it('handles empty string', () => { ... });
+  it('handles zero', () => { ... });
 
-  describe('error cases', () => {
-    it('throws TypeError for invalid input type', () => {
-      expect(() => functionName(123)).toThrow(TypeError);
-      expect(() => functionName(123)).toThrow('[functionName]');
-    });
+  it('throws TypeError for invalid input type', () => {
+    expect(() => functionName(123)).toThrow(TypeError);
+    expect(() => functionName(123)).toThrow('[functionName]');
   });
 });
 ```
@@ -115,7 +109,7 @@ describe('functionName', () => {
 ### Test requirements
 
 - Use `describe` / `it` (not `test`).
-- Three describe blocks: `'happy path'`, `'edge cases'`, `'error cases'`.
+- One top-level `describe` block per test file, named after the function.
 - Error case tests must verify both the error type (`TypeError`) and the message prefix (`[functionName]`).
 - At least 3 happy path tests, 3 edge case tests, and 2 error case tests.
 
@@ -135,4 +129,4 @@ Each helper should have a VitePress doc page at `docs/helpers/<kebab-case-name>.
 
 When generating helpers during a demo, place output files in `sandbox/`:
 - `sandbox/<functionName>.ts` — the function
-- `sandbox/__tests__/<functionName>.test.ts` — the tests
+- `sandbox/<functionName>.test.ts` — the tests

@@ -234,7 +234,7 @@ Usage:
   npx tsx scripts/score.ts --json <file.ts>            Output JSON (for CI)
 
 Examples:
-  npx tsx scripts/score.ts src/helpers/slugify.ts
+  npx tsx scripts/score.ts sandbox/truncateText.ts
   npx tsx scripts/score.ts sandbox/truncateText.ts sandbox/truncateTextV2.ts
 `);
 }

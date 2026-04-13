@@ -2,7 +2,7 @@
 
 Use this template when creating a new helper function. Replace all placeholders.
 
-## Function File (`src/helpers/<functionName>.ts`)
+## Function File (`src/helpers/<functionName>/<functionName>.ts`)
 
 ```ts
 /**
@@ -25,8 +25,8 @@ Use this template when creating a new helper function. Replace all placeholders.
  */
 export function <functionName>(<params>): <returnType> {
   // --- Input validation ---
-  if (typeof <param> !== '<expectedType>') {
-    throw new TypeError('[<functionName>] Expected <param> to be a <expectedType>');
+  if (<param> === undefined || <param> === null) {
+    throw new TypeError('[<functionName>] Expected <param> to be provided');
   }
 
   // --- Logic ---
@@ -34,53 +34,47 @@ export function <functionName>(<params>): <returnType> {
 }
 ```
 
-## Test File (`src/helpers/<functionName>.test.ts`)
+## Test File (`src/helpers/<functionName>/<functionName>.test.ts`)
 
 ```ts
 import { describe, it, expect } from 'vitest';
 import { <functionName> } from './<functionName>';
 
 describe('<functionName>', () => {
-  describe('happy path', () => {
-    it('<describes normal behavior 1>', () => {
-      expect(<functionName>(<input>)).toBe(<expected>);
-    });
-
-    it('<describes normal behavior 2>', () => {
-      expect(<functionName>(<input>)).toBe(<expected>);
-    });
-
-    it('<describes normal behavior 3>', () => {
-      expect(<functionName>(<input>)).toBe(<expected>);
-    });
+  it('<describes normal behavior 1>', () => {
+    expect(<functionName>(<input>)).toBe(<expected>);
   });
 
-  describe('edge cases', () => {
-    it('handles empty string', () => {
-      expect(<functionName>('')).toBe(<expected>);
-    });
-
-    it('handles zero', () => {
-      expect(<functionName>(0)).toBe(<expected>);
-    });
-
-    it('<another edge case>', () => {
-      expect(<functionName>(<input>)).toBe(<expected>);
-    });
+  it('<describes normal behavior 2>', () => {
+    expect(<functionName>(<input>)).toBe(<expected>);
   });
 
-  describe('error cases', () => {
-    it('throws TypeError for invalid type', () => {
-      // @ts-expect-error testing invalid input
-      expect(() => <functionName>(<wrongType>)).toThrow(TypeError);
-      // @ts-expect-error testing invalid input
-      expect(() => <functionName>(<wrongType>)).toThrow('[<functionName>]');
-    });
+  it('<describes normal behavior 3>', () => {
+    expect(<functionName>(<input>)).toBe(<expected>);
+  });
 
-    it('throws TypeError for null', () => {
-      // @ts-expect-error testing invalid input
-      expect(() => <functionName>(null)).toThrow(TypeError);
-    });
+  it('handles empty string', () => {
+    expect(<functionName>('')).toBe(<expected>);
+  });
+
+  it('handles zero', () => {
+    expect(<functionName>(0)).toBe(<expected>);
+  });
+
+  it('<another edge case>', () => {
+    expect(<functionName>(<input>)).toBe(<expected>);
+  });
+
+  it('throws TypeError for invalid type', () => {
+    // @ts-expect-error testing invalid input
+    expect(() => <functionName>(<wrongType>)).toThrow(TypeError);
+    // @ts-expect-error testing invalid input
+    expect(() => <functionName>(<wrongType>)).toThrow('[<functionName>]');
+  });
+
+  it('throws TypeError for null', () => {
+    // @ts-expect-error testing invalid input
+    expect(() => <functionName>(null)).toThrow(TypeError);
   });
 });
 ```

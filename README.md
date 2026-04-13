@@ -190,7 +190,7 @@ The `AGENTS.md` file at the project root is automatically read by GitHub Copilot
 - **JSDoc format** — exactly which tags are required and their format
 - **Input validation** — how to validate params and format error messages
 - **Type safety** — no `any`, explicit return types, `readonly` arrays
-- **Testing structure** — `describe`/`it` blocks, three categories, minimum test counts
+- **Testing structure** — `describe`/`it` blocks, minimum test counts
 - **File organization** — one function per file, barrel exports, co-located tests
 
 Without AGENTS.md, Copilot uses its general training data, which produces functional but inconsistent code. With AGENTS.md, every model (GPT-4o, Claude, Gemini) converges on the same standard.
