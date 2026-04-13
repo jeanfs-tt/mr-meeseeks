@@ -63,7 +63,7 @@ Run the quality check:
 npx tsx scripts/score.ts src/helpers/<functionName>/<functionName>.ts
 ```
 
-The score should be **12/12**. If not, fix the issues identified.
+The score should be **17/17**. If not, fix the issues identified.
 
 ### Step 6: Run Tests
 

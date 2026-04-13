@@ -29,6 +29,13 @@ interface Criterion {
 }
 
 const CRITERIA: Criterion[] = [
+  // ── Code Style ───────────────────────────────────────────────────────
+  {
+    id: 'named-export',
+    label: 'Named export (no default)',
+    check: (s) => /export\s+function\s/.test(s) && !/export\s+default\b/.test(s),
+  },
+  // ── JSDoc ────────────────────────────────────────────────────────────
   {
     id: 'jsdoc',
     label: 'JSDoc block present',
@@ -71,10 +78,40 @@ const CRITERIA: Criterion[] = [
     check: (s) => /@throws\s/.test(s),
   },
   {
+    id: 'since',
+    label: '@since tag',
+    check: (s) => /@since\s/.test(s),
+  },
+  // ── Input Validation ─────────────────────────────────────────────────
+  {
     id: 'validation',
     label: 'Input validation (TypeError)',
     check: (s) => /throw\s+new\s+TypeError\s*\(/.test(s),
   },
+  {
+    id: 'error-format',
+    label: 'Error message format [functionName]',
+    check: (s) => /throw\s+new\s+TypeError\s*\(\s*['"`]\[/.test(s),
+  },
+  // ── Purity ───────────────────────────────────────────────────────────
+  {
+    id: 'no-side-effects',
+    label: 'No side effects (pure function)',
+    check: (s) => {
+      const cleaned = s
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\/\/.*/g, '')
+        .replace(/'[^']*'/g, '')
+        .replace(/"[^"]*"/g, '')
+        .replace(/`[^`]*`/g, '');
+      return !/\bconsole\s*\./.test(cleaned)
+        && !/\bdocument\s*\./.test(cleaned)
+        && !/\bwindow\s*\./.test(cleaned)
+        && !/\bfetch\s*\(/.test(cleaned)
+        && !/\bfs\b/.test(cleaned);
+    },
+  },
+  // ── TypeScript Quality ───────────────────────────────────────────────
   {
     id: 'no-any',
     label: 'No `any` type',
@@ -97,6 +134,7 @@ const CRITERIA: Criterion[] = [
       return fnMatch !== null;
     },
   },
+  // ── Testing ──────────────────────────────────────────────────────────
   {
     id: 'test-exists',
     label: 'Test file exists',
@@ -104,18 +142,28 @@ const CRITERIA: Criterion[] = [
   },
   {
     id: 'test-structure',
-    label: "Tests use describe/it structure",
+    label: 'Tests use describe/it (not test)',
     check: (_s, t) => {
       if (!t) return false;
-      return /describe\s*\(/.test(t) && /\bit\s*\(/.test(t);
+      return /describe\s*\(/.test(t) && /\bit\s*\(/.test(t) && !/\btest\s*\(/.test(t);
     },
   },
   {
     id: 'test-errors',
-    label: 'Tests cover error cases (toThrow)',
+    label: 'Error tests: TypeError + [fn] msg',
     check: (_s, t) => {
       if (!t) return false;
-      return /toThrow/.test(t);
+      return /toThrow\s*\(\s*TypeError\s*\)/.test(t)
+        && /toThrow\s*\(\s*['"`]\[/.test(t);
+    },
+  },
+  {
+    id: 'test-count',
+    label: 'Minimum 8 test cases',
+    check: (_s, t) => {
+      if (!t) return false;
+      const itBlocks = (t.match(/\bit\s*\(/g) || []).length;
+      return itBlocks >= 8;
     },
   },
 ];
