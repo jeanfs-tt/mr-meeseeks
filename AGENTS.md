@@ -18,8 +18,8 @@ src/helpers/
 └── <functionName>/
     ├── <functionName>.ts            # The helper function
     ├── <functionName>.test.ts       # Tests
-    ├── <functionName>.constants.ts  # Constants (if needed)
-    └── <functionName>.types.ts      # Types (if needed)
+    ├── constants.ts  # Constants (if needed)
+    └── types.ts      # Types (if needed)
 ```
 
 ### Rules
@@ -28,7 +28,7 @@ src/helpers/
 2. **Named exports only.** No default exports.
 3. **Barrel export.** Every helper must be re-exported from `src/helpers/index.ts`.
 4. **Co-located tests.** Every `<name>.ts` must have a `<name>.test.ts` in the same folder.
-5. **Co-located constants and types.** If a helper needs constants or types, create `<functionName>.constants.ts` and/or `<functionName>.types.ts` in the same folder.
+5. **Co-located constants and types.** If a helper needs constants or types, create `constants.ts` and/or `types.ts` in the same folder.
 
 ## Naming Conventions
 
@@ -36,8 +36,8 @@ src/helpers/
 - **Folders**: Same as function name. `clampNumber/`, not `clamp-number/` or `clamp/`.
 - **Files**: Same as function name. `clampNumber.ts`, not `clamp-number.ts` or `clamp.ts`.
 - **Test files**: `<functionName>.test.ts`.
-- **Constants files**: `<functionName>.constants.ts`. Export individual `const` values using `UPPER_SNAKE_CASE`.
-- **Types files**: `<functionName>.types.ts`. Export types/interfaces using `PascalCase` with a descriptive name (e.g., `ClampNumberOptions`).
+- **Constants files**: `constants.ts`. Export individual `const` values using `UPPER_SNAKE_CASE`.
+- **Types files**: `types.ts`. Export types/interfaces using `PascalCase` with a descriptive name (e.g., `ClampNumberOptions`).
 
 ## JSDoc Requirements
 
